@@ -105,10 +105,10 @@ export default async function handler(req, res) {
     console.log("Received SNS message type:", msgType);
 
     if (msgType === "SubscriptionConfirmation") {
-      console.log("SNS message is a subscription confirmation ", snsPayload);
-      if (snsPayload.SubscribeURL) {
+      console.log("SNS message is a subscription confirmation ", snsPayload, typeof snsPayload, snsPayload?.SubscribeURL);
+      if (snsPayload?.SubscribeURL) {
         try {
-          const confirmRes = await fetch(snsPayload.SubscribeURL);
+          const confirmRes = await fetch(snsPayload?.SubscribeURL);
           if (confirmRes.ok) {
             console.log(
               "SNS SubscriptionConfirmation fetch succeeded:",
