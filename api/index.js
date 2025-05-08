@@ -100,12 +100,19 @@ export default async function handler(req, res) {
     // Parse the request body
     const payload = req.body;
     console.log("Received payload:", payload);
-    const snsPayload = payload.source?.Type ? payload.source : payload;
+    let snsPayload = payload.source?.Type ? payload.source : payload;
+    snsPayload =
+      typeof snsPayload === "string" ? JSON.parse(snsPayload) : snsPayload;
     const msgType = req.headers["x-amz-sns-message-type"] || snsPayload.Type;
     console.log("Received SNS message type:", msgType);
 
     if (msgType === "SubscriptionConfirmation") {
-      console.log("SNS message is a subscription confirmation ", snsPayload, typeof snsPayload, snsPayload?.SubscribeURL);
+      console.log(
+        "SNS message is a subscription confirmation ",
+        snsPayload,
+        typeof snsPayload,
+        snsPayload?.SubscribeURL
+      );
       if (snsPayload?.SubscribeURL) {
         try {
           const confirmRes = await fetch(snsPayload?.SubscribeURL);
